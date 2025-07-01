@@ -2,6 +2,7 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -34,7 +35,7 @@ namespace StickyNoteApp.Services
         public List<Note> LoadNotes()
         {
             //Check if file exists, return new List if it does NOT exist
-            if(!File.Exists(_filePath)) 
+            if (!File.Exists(_filePath))
                 return new List<Note>();
             //Create string containing filePath text being read
             string json = File.ReadAllText(_filePath);

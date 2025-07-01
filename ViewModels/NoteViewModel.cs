@@ -14,6 +14,9 @@ namespace StickyNoteApp.ViewModels
         //Wrap the model
         private Note _note;
 
+        // Expose the wrapped Note model publicly for saving/loading
+        public Note Note => _note;
+
         //Constructor creating instance of note
         public NoteViewModel(Note note)
         {
