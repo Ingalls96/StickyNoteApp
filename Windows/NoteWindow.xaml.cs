@@ -33,6 +33,20 @@ namespace StickyNoteApp.Windows
             this.Top = _viewModel.Y;
         }
 
+        private void BoldButton_Click(object sender, RoutedEventArgs e)
+        {
+            //Focus the rich text box holding the bold button
+            ContentEditor.Focus();
+            //Variable to store the font weight value of the selected text in the note
+            var isBold = ContentEditor.Selection.GetPropertyValue(TextElement.FontWeightProperty);
+            //Set the font weight to bold or normal by checking if font weight is already bold, and if the selected text is an unset value
+            var newWeight = (isBold != DependencyProperty.UnsetValue && (FontWeight)isBold == FontWeights.Bold)
+                ? FontWeights.Normal : FontWeights.Bold;
+
+            ContentEditor.Selection.ApplyPropertyValue(TextElement.FontWeightProperty, newWeight);
+
+        }
+
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();

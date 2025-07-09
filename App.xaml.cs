@@ -22,7 +22,7 @@ namespace StickyNoteApp
             foreach (var note in notes)
             {
                 //Create a new ViewModel for each note
-                var viewModel = new NoteViewModel(note);
+                var viewModel = new NoteViewModel(note); 
                 //Create a new NoteWindow and then grab data context for the current note
                 var window = new NoteWindow(viewModel);
                 //Load the position and size of the window, then show the window
