@@ -15,9 +15,6 @@ using System.Windows.Shapes;
 
 namespace StickyNoteApp.Windows
 {
-    /// <summary>
-    /// Interaction logic for NoteWindow.xaml
-    /// </summary>
     public partial class NoteWindow : Window
     {
         private NoteViewModel _viewModel;
@@ -33,20 +30,42 @@ namespace StickyNoteApp.Windows
             this.Top = _viewModel.Y;
         }
 
-        private void BoldButton_Click(object sender, RoutedEventArgs e)
+        //Sets the font weight to normal or bold depending on toggle buttons status (IsChecked)
+        private void BoldToggle_Click(object sender, RoutedEventArgs e)
         {
-            //Focus the rich text box holding the bold button
             ContentEditor.Focus();
-            //Variable to store the font weight value of the selected text in the note
-            var isBold = ContentEditor.Selection.GetPropertyValue(TextElement.FontWeightProperty);
-            //Set the font weight to bold or normal by checking if font weight is already bold, and if the selected text is an unset value
-            var newWeight = (isBold != DependencyProperty.UnsetValue && (FontWeight)isBold == FontWeights.Bold)
-                ? FontWeights.Normal : FontWeights.Bold;
-
+            //Set newWeight variable to bold or normal text by checking IsChecked on BoldToggle
+            var newWeight = BoldToggle.IsChecked == true
+                ? FontWeights.Bold
+                : FontWeights.Normal;
+            //Set ContentEditor font weight to the newWeight value
             ContentEditor.Selection.ApplyPropertyValue(TextElement.FontWeightProperty, newWeight);
-
         }
 
+        //Sets the Toggle checked status of the toggle button based on the font weight of the current text selected in ContentEditor
+        private void ContentEditor_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            //get the current font weight selected
+            var weight = ContentEditor.Selection.GetPropertyValue(TextElement.FontWeightProperty);
+
+            //Toggle the button based on the value of variable weight
+            if (weight != DependencyProperty.UnsetValue && (FontWeight)weight == FontWeights.Bold)
+            {
+                BoldToggle.IsChecked = true;
+            }
+            else
+            {
+                BoldToggle.IsChecked = false;
+            }
+        }
+
+        //Set toggle button to not checked if the user goes out of ContentEditor (Content text box of Sticky Note window)
+        private void ContentEditor_LostFocus(object sender, RoutedEventArgs e)
+        {
+            BoldToggle.IsChecked = false;
+        }
+
+        //Makes sticky note window draggable without the default window style header
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
