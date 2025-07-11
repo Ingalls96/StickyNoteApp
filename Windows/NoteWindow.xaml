@@ -34,17 +34,27 @@
                 <!-- Content textbox -->
                 <RichTextBox x:Name="ContentEditor" Grid.Row="3"
                     SelectionChanged="ContentEditor_SelectionChanged"
-                    LostFocus="ContentEditor_LostFocus"
                     AcceptsReturn="True"
                     VerticalScrollBarVisibility="Auto"
                     Background="Transparent"
                     BorderThickness="0"
                     Margin="0,5,0,5"/>
+                
                 <!--Toolbar Stack Panel-->
                 <StackPanel Grid.Row="4" Orientation="Horizontal">
-                    <ToggleButton x:Name="BoldToggle" Click="BoldToggle_Click"
-                            Width="20" Height="20" ToolTip="Bold">
+                    <ToggleButton 
+                        x:Name="BoldToggle"
+                        Click="BoldToggle_Click"
+                        Width="20" Height="20" 
+                        ToolTip="Bold">
                         <TextBlock FontWeight="Bold">B</TextBlock>
+                    </ToggleButton>
+                    <ToggleButton
+                        x:Name="BulletToggle"
+                        Click="BulletToggle_Click"
+                        Width="20" Height="20" Margin="10,0,0,0" 
+                        ToolTip="Bold">
+                        <TextBlock>-</TextBlock>
                     </ToggleButton>
                 </StackPanel>
 
