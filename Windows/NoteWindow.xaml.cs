@@ -1,7 +1,9 @@
 ﻿using StickyNoteApp.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,13 +25,52 @@ namespace StickyNoteApp.Windows
         {
             InitializeComponent();
             _viewModel = viewModel;
-            DataContext = _viewModel; 
+            DataContext = _viewModel;
+
+            //Loading the content of the RichTextBox and its different text properties (bold, italics etc)
+            if (!string.IsNullOrWhiteSpace(_viewModel.Content))
+            {
+                try
+                {
+                    //Grab the entire portion of content in a TextRange
+                    TextRange range = new TextRange(
+                        ContentEditor.Document.ContentStart,
+                        ContentEditor.Document.ContentEnd);
+                    //This uses a MemoryStream to load the view models content
+                    using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(_viewModel.Content)))
+                    {
+                        range.Load(ms, DataFormats.Xaml);
+                    }
+                }
+                catch
+                {
+                    // If something goes wrong (invalid format?), this will fallback to plain text
+                    ContentEditor.Document.Blocks.Clear();
+                    ContentEditor.Document.Blocks.Add(new Paragraph(new Run(_viewModel.Content)));
+                }
+            }
 
             this.Width = _viewModel.Width;
             this.Height = _viewModel.Height;
             this.Left = _viewModel.X;
             this.Top = _viewModel.Y;
         }
+
+        //Brings up the color selector popup
+        private void ColorSelectorOpen_Click(object sender, RoutedEventArgs e)
+        {
+            ColorPopup.IsOpen = true;
+        }
+        //takes the selected color and sets the sticky note to the desired color
+        private void ColorButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Background is SolidColorBrush brush)
+            {
+                _viewModel.BackgroundColor = brush.ToString();
+                ColorPopup.IsOpen = false;
+            }
+        }
+
         //Toggles bullet points on each line of the content area of the sticky note window
         private void BulletToggle_Click(object sender, RoutedEventArgs e)
         {
@@ -106,7 +147,33 @@ namespace StickyNoteApp.Windows
         }
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            if (Application.Current is App app)
+            {
+                app.SaveAllNotes();
+            }
+            this.Hide();
+        }
+
+        //SyncContent takes the text within Content and syncs it to the view model.
+        //This is used because Content is a RichTextBox which does not have binding properties :(
+        public void SyncContent()
+        {
+            TextRange textRange = new TextRange(
+                ContentEditor.Document.ContentStart,
+                ContentEditor.Document.ContentEnd);
+
+            //Im using a MemoryStream here to save the entire TextRange as a XAML. This was needed to save the bold and italic properties of text
+            using (var ms = new MemoryStream())
+            {
+                // Save to XAML
+                textRange.Save(ms, DataFormats.Xaml);
+                ms.Position = 0;
+
+                using (var reader = new StreamReader(ms))
+                {
+                    _viewModel.Content = reader.ReadToEnd();
+                }
+            }
         }
     }
 }

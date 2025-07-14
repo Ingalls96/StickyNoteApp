@@ -52,6 +52,8 @@ namespace StickyNoteApp
                 //Check if each window is a NoteWindow
                 if (window is NoteWindow noteWindow)
                 {
+                    //Sync the content area of the sticky note to the view model
+                    noteWindow.SyncContent();
                     //Grab the Data context of each note by creating a NoteViewModel
                     NoteViewModel noteViewModel = noteWindow.DataContext as NoteViewModel;
 

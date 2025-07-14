@@ -69,7 +69,20 @@
                         ToolTip="Italics">
                         <TextBlock>I</TextBlock>
                     </ToggleButton>
+                    <Button x:Name="ColorButton" Click="ColorSelectorOpen_Click" Content="C" Width="20" Height="20" Margin="10,0,0,0"/>
                 </StackPanel>
+                <Popup Name="ColorPopup" PlacementTarget="{Binding ElementName=ColorButton}"
+                       StaysOpen="False" AllowsTransparency="True" HorizontalOffset="175">
+                    <Border Background="DimGray" BorderBrush="Black" BorderThickness="1" Padding="5">
+                        <WrapPanel>
+                            <Button Background="#FFFF88" Width="30" Height="30" Click="ColorButton_Click"/>
+                            <Button Background="LightGreen" Width="30" Height="30" Click="ColorButton_Click"/>
+                            <Button Background="SkyBlue" Width="30" Height="30" Click="ColorButton_Click"/>
+                            <Button Background="Pink" Width="30" Height="30" Click="ColorButton_Click"/>
+                            <Button Background="Lavender" Width="30" Height="30" Click="ColorButton_Click"/>
+                        </WrapPanel>
+                    </Border>
+                </Popup>
 
             </Grid>
         </Border>
