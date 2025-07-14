@@ -23,25 +23,37 @@ namespace StickyNoteApp.Windows
         {
             InitializeComponent();
             _viewModel = viewModel;
-            DataContext = _viewModel;
+            DataContext = _viewModel; 
 
             this.Width = _viewModel.Width;
             this.Height = _viewModel.Height;
             this.Left = _viewModel.X;
             this.Top = _viewModel.Y;
         }
+        //Toggles bullet points on each line of the content area of the sticky note window
         private void BulletToggle_Click(object sender, RoutedEventArgs e)
         {
             ContentEditor.Focus();
+            //Check if the ToggleBullets command is executable and toggle bullet points
             if (EditingCommands.ToggleBullets.CanExecute(null, ContentEditor))
             {
                 EditingCommands.ToggleBullets.Execute(null, ContentEditor);
             }
         }
+        //Toggles and sets Italic style font to content area of sticky note
+        private void ItalicToggle_Click(Object sender, RoutedEventArgs e)
+        {
+            ContentEditor.Focus();
+            var newFont = ItalicToggle.IsChecked == true
+                ? FontStyles.Italic
+                : FontStyles.Normal;
+
+            ContentEditor.Selection.ApplyPropertyValue(TextElement.FontStyleProperty, newFont);
+        }
 
         //Sets the font weight to normal or bold depending on toggle buttons status (IsChecked)
         private void BoldToggle_Click(object sender, RoutedEventArgs e)
-        {
+        { 
             ContentEditor.Focus();
             //Set newWeight variable to bold or normal text by checking IsChecked on BoldToggle
             var newWeight = BoldToggle.IsChecked == true
@@ -51,11 +63,13 @@ namespace StickyNoteApp.Windows
             ContentEditor.Selection.ApplyPropertyValue(TextElement.FontWeightProperty, newWeight);
         }
 
-        //Sets the Toggle checked status of the toggle button based on the font weight of the current text selected in ContentEditor
+        //Sets the Toggle checked status of the toggle buttons based on the current status of each toggle buttons value
         private void ContentEditor_SelectionChanged(object sender, RoutedEventArgs e)
         {
             //get the current font weight selected
             var weight = ContentEditor.Selection.GetPropertyValue(TextElement.FontWeightProperty);
+            //Get the current font style selected
+            var font = ContentEditor.Selection.GetPropertyValue(TextElement.FontStyleProperty);
 
             //Toggle the button based on the value of variable weight
             if (weight != DependencyProperty.UnsetValue && (FontWeight)weight == FontWeights.Bold)
@@ -66,6 +80,16 @@ namespace StickyNoteApp.Windows
             {
                 BoldToggle.IsChecked = false;
             }
+
+            //Toggle italics button based on the value of the variable font
+            if (font != DependencyProperty.UnsetValue && (FontStyle)font == FontStyles.Italic)
+            {
+                ItalicToggle.IsChecked = true;
+            }
+            else
+            {
+                ItalicToggle.IsChecked = false;
+            }
         }
 
         //Makes sticky note window draggable without the default window style header
@@ -74,6 +98,15 @@ namespace StickyNoteApp.Windows
             this.DragMove();
             _viewModel.X = this.Left;
             _viewModel.Y = this.Top;
+        }
+
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
