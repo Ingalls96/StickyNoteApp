@@ -44,7 +44,7 @@ namespace StickyNoteApp.Windows
                 }
                 catch
                 {
-                    // If something goes wrong (invalid format?), this will fallback to plain text
+                    // If something goes wrong (invalid format), this will fallback to plain text
                     ContentEditor.Document.Blocks.Clear();
                     ContentEditor.Document.Blocks.Add(new Paragraph(new Run(_viewModel.Content)));
                 }

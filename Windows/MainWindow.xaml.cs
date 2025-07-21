@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Linq;
+using StickyNoteApp.Services;
 
 namespace StickyNoteApp
 {
@@ -20,6 +21,7 @@ namespace StickyNoteApp
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainMenuViewModel(new NoteStorage());
             this.Closing += MainWindow_Closing;
         }
 
@@ -38,6 +40,19 @@ namespace StickyNoteApp
             if (Application.Current is App app)
             {
                 app.SaveAllNotes();
+            }
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
+        }
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current is App app) 
+            {
+                app.SaveAllNotes();
+                this.Close();
             }
         }
     }
