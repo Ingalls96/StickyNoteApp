@@ -13,25 +13,28 @@ namespace StickyNoteApp
     {
         private NoteStorage _noteStorage = new NoteStorage();
 
+        public MainMenuViewModel MainMenuViewModel { get; private set; } = null!;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            //Create a variable to store the LoadNotes output
-            var notes = _noteStorage.LoadNotes();
-            //foreach loop for every note in notes
-            foreach (var note in notes)
-            {
-                //Create a new ViewModel for each note
-                var viewModel = new NoteViewModel(note); 
-                //Create a new NoteWindow and then grab data context for the current note
-                var window = new NoteWindow(viewModel);
-                //Load the position and size of the window, then show the window
-                window.Left = note.X;
-                window.Top = note.Y;
-                window.Width = note.Width;
-                window.Height = note.Height;
 
-                window.Show();
+            // Create and load main menu
+            MainMenuViewModel = new MainMenuViewModel(new NoteStorage());
+            MainWindow mainWindow = new MainWindow
+            {
+                DataContext = MainMenuViewModel
+            };
+            mainWindow.Show();
+
+            // Opens windows for each note loaded into the shared ViewModel
+            foreach (var noteVM in MainMenuViewModel.Notes)
+            {
+                var window = new NoteWindow(noteVM);
+                window.Left = noteVM.X;
+                window.Top = noteVM.Y;
+                window.Width = noteVM.Width;
+                window.Height = noteVM.Height;
             }
         }
 
@@ -44,35 +47,26 @@ namespace StickyNoteApp
         public void SaveAllNotes()
         {
             Debug.WriteLine("Saving all notes...");
-            //Create a List to collect all notes user created
-            List<Note> allNotes = new List<Note>();
-            //Start a foreach loop for every current window of the program
+            if (MainMenuViewModel == null)
+                return;
+
+            // Sync window positions and content
             foreach (Window window in Current.Windows)
             {
-                //Check if each window is a NoteWindow
-                if (window is NoteWindow noteWindow)
+                if (window is NoteWindow noteWindow &&
+                    noteWindow.DataContext is NoteViewModel vm)
                 {
-                    //Sync the content area of the sticky note to the view model
+                    //Sync Content from the view model
                     noteWindow.SyncContent();
-                    //Grab the Data context of each note by creating a NoteViewModel
-                    NoteViewModel noteViewModel = noteWindow.DataContext as NoteViewModel;
-
-                    //If statement making sure the note object is not null, then saving the position and size of the window (x and y for position) (Width Height for size)
-                    if (noteViewModel != null)
-                    {
-                        //Cast the NoteViewModel to a Note object so we can work with the data as a Note
-                        Note note = noteViewModel.Note;
-
-                        note.X = noteWindow.Left;
-                        note.Y = noteWindow.Top;
-                        note.Width = noteWindow.Width;
-                        note.Height = noteWindow.Height;
-
-                    //Add the note to the allNotes List
-                    allNotes.Add(note);
-                    }
+                    vm.X = noteWindow.Left;
+                    vm.Y = noteWindow.Top;
+                    vm.Width = noteWindow.Width;
+                    vm.Height = noteWindow.Height;
                 }
             }
+
+            // Save only the Notes from the shared ViewModel
+            var allNotes = MainMenuViewModel.Notes.Select(vm => vm.Note).ToList();
             Debug.WriteLine($"Notes to save: {allNotes.Count}");
             _noteStorage.SaveNotes(allNotes);
         }

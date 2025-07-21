@@ -9,17 +9,17 @@ using StickyNoteApp.Services;
 
 namespace StickyNoteApp.ViewModels
 {
-    internal class MainMenuViewModel
+    public class MainMenuViewModel
     {
         //Member variable to access NoteStorage methods
         private readonly NoteStorage _noteStorage;
         //ObservableCollection can be used here to automatically observe and update the list of notes on a users program
-        public ObservableCollection<Note> Notes { get; set; }
+        public ObservableCollection<NoteViewModel> Notes { get; set; }
         
         public MainMenuViewModel(NoteStorage noteStorage)
         {
             _noteStorage = noteStorage;
-            Notes = new ObservableCollection<Note>();
+            Notes = new ObservableCollection<NoteViewModel>();
             Load();
         }
 
@@ -30,7 +30,7 @@ namespace StickyNoteApp.ViewModels
 
             foreach (var note in loadedNotes)
             {
-                Notes.Add(note);
+                Notes.Add(new NoteViewModel(note));
             }
         }
     }

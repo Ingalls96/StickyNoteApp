@@ -38,7 +38,9 @@
 
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Title}" Margin="5" FontSize="16" />
+                    <Button Content="{Binding Title}" Margin="5" FontSize="16" 
+                    Click="OpenNote_Click"
+                    Tag="{Binding}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

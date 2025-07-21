@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace StickyNoteApp.Services
 {
-    class NoteStorage
+    public class NoteStorage
     {
 
         //Creates Directory to User's Local AppData folder to store Notes created during launch

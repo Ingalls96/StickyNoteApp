@@ -24,14 +24,18 @@ namespace StickyNoteApp
             DataContext = new MainMenuViewModel(new NoteStorage());
             this.Closing += MainWindow_Closing;
         }
-
+        //Creates a new sticky note
         public void Click_CreateNote(object sender, RoutedEventArgs e)
         {
-            Note note = new Note();
-            NoteViewModel viewModel = new NoteViewModel(note);
-            NoteWindow noteWindow = new NoteWindow(viewModel);
+            if (DataContext is MainMenuViewModel menuVM)
+            {
+                Note newNote = new Note();
+                NoteViewModel newNoteVM = new NoteViewModel(newNote);
+                menuVM.Notes.Add(newNoteVM);
 
-            noteWindow.Show();
+                var noteWindow = new NoteWindow(newNoteVM);
+                noteWindow.Show();
+            }
         }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -39,20 +43,56 @@ namespace StickyNoteApp
             // Call SaveAllNotes via App instance
             if (Application.Current is App app)
             {
+                foreach (Window window in app.Windows)
+                {
+                    window.Hide();
+                }
                 app.SaveAllNotes();
             }
         }
-
+        //Makes window draggable without Built in Window toolbar
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
         }
+
+        //Custom close button that saves all notes then shuts down program
         private void Close_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current is App app) 
             {
+                //Hide each sticky note before saving them
+                foreach (Window window in Application.Current.Windows)
+                {
+                    window.Hide();
+                }
                 app.SaveAllNotes();
                 this.Close();
+            }
+            Application.Current.Shutdown();
+        }
+        //Dictionary for tracking open sticky note windows
+        private readonly Dictionary<NoteViewModel, NoteWindow> openNoteWindows = new();
+        
+        //Grabs the selected note from the Dictionary of openNoteWindows and shows the window
+        private void OpenNote_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is NoteViewModel noteVM)
+            {
+                if (openNoteWindows.TryGetValue(noteVM, out var existingWindow))
+                {
+                    if (!existingWindow.IsVisible)
+                        existingWindow.Show();
+
+                    existingWindow.Activate();
+                }
+                else
+                {
+                    var newWindow = new NoteWindow(noteVM);
+                    newWindow.Closed += (s, args) => openNoteWindows.Remove(noteVM);
+                    openNoteWindows[noteVM] = newWindow;
+                    newWindow.Show();
+                }
             }
         }
     }
