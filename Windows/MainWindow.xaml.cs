@@ -71,6 +71,12 @@ namespace StickyNoteApp
             }
             Application.Current.Shutdown();
         }
+
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
         //Dictionary for tracking open sticky note windows
         private readonly Dictionary<NoteViewModel, NoteWindow> openNoteWindows = new();
         
@@ -93,6 +99,19 @@ namespace StickyNoteApp
                     openNoteWindows[noteVM] = newWindow;
                     newWindow.Show();
                 }
+            }
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var note = button?.Tag as NoteViewModel;
+
+            if (note != null) 
+            {
+                var viewModel = DataContext as MainMenuViewModel;
+                viewModel?.Notes.Remove(note);
+                
             }
         }
     }

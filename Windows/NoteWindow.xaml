@@ -26,8 +26,8 @@
                 
                 <!-- Top Window Toolbar -->
                 <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="-" Width="20" Height="20" ToolTip="Minimize" Click="Minimize_Click" Background="{x:Null}"/>
-                    <Button Content="X" Width="20" Height="20" ToolTip="Close" Click="Close_Click" Background="{x:Null}" Margin="10,0,0,0"/>
+                    <Button Content="🗕" Width="20" Height="20" ToolTip="Minimize" Click="Minimize_Click" Background="{x:Null}"/>
+                    <Button Content="🗙" Width="20" Height="20" ToolTip="Close" Click="Close_Click" Background="{x:Null}" Margin="10,0,0,0"/>
                 </StackPanel>
 
                 <!-- Title textbox -->
@@ -53,23 +53,23 @@
                         Click="BoldToggle_Click"
                         Width="20" Height="20" 
                         ToolTip="Bold">
-                        <TextBlock FontWeight="Bold">B</TextBlock>
+                        <TextBlock FontWeight="Bold">𝐁</TextBlock>
                     </ToggleButton>
                     <ToggleButton
                         x:Name="BulletToggle"
                         Click="BulletToggle_Click"
                         Width="20" Height="20" Margin="10,0,0,0" 
-                        ToolTip="Bold">
-                        <TextBlock>-</TextBlock>
+                        ToolTip="Toggle">
+                        <TextBlock>⁃</TextBlock>
                     </ToggleButton>
                     <ToggleButton
                         x:Name="ItalicToggle"
                         Click="ItalicToggle_Click"
                         Width="20" Height="20" Margin="10,0,0,0"
                         ToolTip="Italics">
-                        <TextBlock>I</TextBlock>
+                        <TextBlock>ⅈ</TextBlock>
                     </ToggleButton>
-                    <Button x:Name="ColorButton" Click="ColorSelectorOpen_Click" Content="C" Width="20" Height="20" Margin="10,0,0,0"/>
+                    <Button x:Name="ColorButton" Click="ColorSelectorOpen_Click" Content="🖌" Width="20" Height="20" Margin="10,0,0,0"/>
                 </StackPanel>
                 <Popup Name="ColorPopup" PlacementTarget="{Binding ElementName=ColorButton}"
                        StaysOpen="False" AllowsTransparency="True" HorizontalOffset="175">
