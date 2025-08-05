@@ -35,6 +35,8 @@ namespace StickyNoteApp
 
                 var noteWindow = new NoteWindow(newNoteVM);
                 noteWindow.Show();
+                //Add new note to list of currently open notes
+                openNoteWindows.Add(newNoteVM, noteWindow);
             }
         }
 
@@ -105,13 +107,21 @@ namespace StickyNoteApp
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            var note = button?.Tag as NoteViewModel;
+            var noteVM = button?.Tag as NoteViewModel;
 
-            if (note != null) 
+            //Deletes the note selected from the main menu list
+            if (noteVM != null) 
             {
                 var viewModel = DataContext as MainMenuViewModel;
-                viewModel?.Notes.Remove(note);
-                
+                viewModel?.Notes.Remove(noteVM);
+
+                //Close the open sticky note if the delete button is clicked
+                if (openNoteWindows.TryGetValue(noteVM, out var noteWindow)) 
+                {
+                    noteWindow.Close();
+                    //remove from dictionary of open note windows
+                    openNoteWindows.Remove(noteVM);
+                }
             }
         }
     }
