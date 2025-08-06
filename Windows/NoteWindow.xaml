@@ -5,7 +5,7 @@
         Width="{Binding Width}" 
         Height="{Binding Height}"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
-        ResizeMode="CanResizeWithGrip" Topmost="True"
+        ResizeMode="CanResizeWithGrip" Topmost="True" MaxWidth="1000"
         MouseLeftButtonDown="Window_MouseLeftButtonDown">
     <Grid>
         <Border CornerRadius="10" 
@@ -16,7 +16,7 @@
             <!-- Grid layout with rows -->
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="30"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="20"/>
                     <RowDefinition Height="*"/>
@@ -25,15 +25,15 @@
                 </Grid.RowDefinitions>
                 
                 <!-- Top Window Toolbar -->
-                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="🗕" Width="20" Height="20" ToolTip="Minimize" Click="Minimize_Click" Background="{x:Null}"/>
-                    <Button Content="🗙" Width="20" Height="20" ToolTip="Close" Click="Close_Click" Background="{x:Null}" Margin="10,0,0,0"/>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,-10,5,0">
+                    <Button Content="🗕" FontSize="20" Margin="0,-10,-5,0" BorderBrush="Transparent" Width="30" Height="30" ToolTip="Minimize" Click="Minimize_Click" Background="{x:Null}"/>
+                    <Button Content="🗙" FontSize="15" BorderBrush="Transparent" Width="30" Height="30" ToolTip="Close" Click="Close_Click" Background="{x:Null}" Margin="10,0,0,0"/>
                 </StackPanel>
 
                 <!-- Title textbox -->
                 <TextBox Grid.Row="1" AcceptsReturn="False" TextWrapping="Wrap" Height="40"
                      Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     TextAlignment="Center" MaxLength="50" MaxLines="2" Margin="10,0,10,-5"
+                     TextAlignment="Center" MaxLength="30" MaxLines="2" Margin="10,5,10,-5"
                      FontWeight="Bold" FontSize="16"
                      Background="Transparent" BorderThickness="0"/>
 
@@ -44,42 +44,71 @@
                     VerticalScrollBarVisibility="Auto"
                     Background="Transparent"
                     BorderThickness="0"
-                    Margin="0,5,0,5"/>
+                    Margin="0,-15,0,5"/>
                 
                 <!--Toolbar Stack Panel-->
-                <StackPanel Grid.Row="4" Orientation="Horizontal">
-                    <ToggleButton 
-                        x:Name="BoldToggle"
-                        Click="BoldToggle_Click"
-                        Width="20" Height="20" 
-                        ToolTip="Bold">
-                        <TextBlock FontWeight="Bold">𝐁</TextBlock>
-                    </ToggleButton>
-                    <ToggleButton
-                        x:Name="BulletToggle"
-                        Click="BulletToggle_Click"
-                        Width="20" Height="20" Margin="10,0,0,0" 
-                        ToolTip="Toggle">
-                        <TextBlock>⁃</TextBlock>
-                    </ToggleButton>
-                    <ToggleButton
-                        x:Name="ItalicToggle"
-                        Click="ItalicToggle_Click"
-                        Width="20" Height="20" Margin="10,0,0,0"
-                        ToolTip="Italics">
-                        <TextBlock>ⅈ</TextBlock>
-                    </ToggleButton>
-                    <Button x:Name="ColorButton" Click="ColorSelectorOpen_Click" Content="🖌" Width="20" Height="20" Margin="10,0,0,0"/>
-                </StackPanel>
+                <Border Grid.Row="4" BorderBrush="Black" BorderThickness="0,1,0,0" Margin="0,-10,0,0">
+                    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Grid.Row="4" Orientation="Horizontal">
+                        <ToggleButton 
+                            x:Name="BoldToggle"
+                            Click="BoldToggle_Click"
+                            Width="25" Height="25"
+                            Background="Transparent" BorderBrush="Black"
+                            ToolTip="Bold">
+                            <TextBlock FontWeight="Bold">𝐁</TextBlock>
+                        </ToggleButton>
+                        <ToggleButton
+                            x:Name="BulletToggle"
+                            Click="BulletToggle_Click"
+                            Background="Transparent" BorderBrush="Black"
+                            Width="25" Height="25" Margin="20,0,0,0" 
+                            ToolTip="Bullet Points">
+                            <TextBlock>⁃</TextBlock>
+                        </ToggleButton>
+                        <ToggleButton
+                            x:Name="ItalicToggle"
+                            Click="ItalicToggle_Click"
+                            Background="Transparent" BorderBrush="Black"
+                            Width="25" Height="25" Margin="20,0,10,0"
+                            ToolTip="Italics">
+                            <TextBlock>ⅈ</TextBlock>
+                        </ToggleButton>
+                        <Button x:Name="ColorButton" Background="Transparent" BorderBrush="Black" ToolTip="Color" Click="ColorSelectorOpen_Click" Content="🖌" Width="25" Height="25" Margin="10,0,0,0">
+                            <Button.Style>
+                                <Style TargetType="Button"/>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </Border>
                 <Popup Name="ColorPopup" PlacementTarget="{Binding ElementName=ColorButton}"
                        StaysOpen="False" AllowsTransparency="True" HorizontalOffset="175">
                     <Border Background="DimGray" BorderBrush="Black" BorderThickness="1" Padding="5">
                         <WrapPanel>
-                            <Button Background="#FFFF88" Width="30" Height="30" Click="ColorButton_Click"/>
-                            <Button Background="LightGreen" Width="30" Height="30" Click="ColorButton_Click"/>
-                            <Button Background="SkyBlue" Width="30" Height="30" Click="ColorButton_Click"/>
-                            <Button Background="Pink" Width="30" Height="30" Click="ColorButton_Click"/>
-                            <Button Background="Lavender" Width="30" Height="30" Click="ColorButton_Click"/>
+                            <Button Background="#FFFF88" Width="30" Height="30" Click="ColorButton_Click">
+                                <Button.Style>
+                                    <Style TargetType="Button"/>
+                                </Button.Style>
+                            </Button>
+                            <Button Background="LightGreen" Width="30" Height="30" Click="ColorButton_Click">
+                                <Button.Style>
+                                    <Style TargetType="Button"/>
+                                </Button.Style>
+                            </Button>
+                            <Button Background="SkyBlue" Width="30" Height="30" Click="ColorButton_Click">
+                                <Button.Style>
+                                    <Style TargetType="Button"/>
+                                </Button.Style>
+                            </Button>
+                            <Button Background="Pink" Width="30" Height="30" Click="ColorButton_Click">
+                                <Button.Style>
+                                    <Style TargetType="Button"/>
+                                </Button.Style>
+                            </Button>
+                            <Button Background="Lavender" Width="30" Height="30" Click="ColorButton_Click">
+                                <Button.Style>
+                                    <Style TargetType="Button"/>
+                                </Button.Style>
+                            </Button>
                         </WrapPanel>
                     </Border>
                 </Popup>
